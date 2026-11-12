@@ -486,131 +486,285 @@ HTML_VISOR = """<!DOCTYPE html>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AlphaFold-Lite Pocket Viewer · Docker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Text:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #090d16;
-      --panel: #111827;
-      --border: #1f2937;
-      --text: #f3f4f6;
-      --muted: #9ca3af;
-      --af-vh: #1d4ed8;
-      --af-hi: #38bdf8;
-      --af-lo: #facc15;
-      --af-vl: #fb923c;
+      --bg: #f8f9fa;
+      --panel: #ffffff;
+      --panel-hover: #f1f3f4;
+      --border: #dadce0;
+      --border-subtle: #e8eaed;
+      --text: #202124;
+      --muted: #5f6368;
+      --accent: #1a73e8;
+      --accent-hover: #1557b0;
+      --accent-soft: #e8f0fe;
+      --af-vh: #004ac6;
+      --af-hi: #0284c7;
+      --af-lo: #f59e0b;
+      --af-vl: #ea580c;
+      --shadow-sm: 0 1px 2px 0 rgba(60,64,67,0.08), 0 1px 3px 1px rgba(60,64,67,0.05);
+      --shadow-md: 0 2px 6px 2px rgba(60,64,67,0.12);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: system-ui, -apple-system, sans-serif;
+      font-family: 'Google Sans Text', 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg);
       color: var(--text);
-      padding: 1.5rem;
+      padding: 1.75rem 2rem;
+      max-width: 1320px;
+      margin: 0 auto;
       line-height: 1.5;
     }
     header {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.25rem 1.75rem;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 1rem;
-      padding-bottom: 1.1rem;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 1.25rem;
+      gap: 1.25rem;
+      margin-bottom: 1.75rem;
+      box-shadow: var(--shadow-sm);
+    }
+    h1 {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-top: 0.2rem;
     }
     .badge {
-      background: rgba(56, 189, 248, 0.15);
-      color: var(--af-hi);
-      border: 1px solid var(--af-hi);
-      padding: 0.35rem 0.75rem;
-      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid #d2e3fc;
+      padding: 0.45rem 0.95rem;
+      border-radius: 9999px;
       font-size: 0.82rem;
       font-weight: 600;
     }
+    .dot-pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #34a853;
+      box-shadow: 0 0 0 0 rgba(52, 168, 83, 0.7);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(52, 168, 83, 0.7); }
+      70% { box-shadow: 0 0 0 8px rgba(52, 168, 83, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(52, 168, 83, 0); }
+    }
     .toolbar {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1rem 1.5rem;
       display: flex;
       flex-wrap: wrap;
-      gap: 0.75rem;
+      gap: 1rem;
       align-items: center;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.75rem;
+      box-shadow: var(--shadow-sm);
     }
-    select, button {
-      padding: 0.6rem 1rem;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--panel);
+    label {
+      font-size: 0.88rem;
+      font-weight: 600;
       color: var(--text);
-      font-size: 0.9rem;
+    }
+    select {
+      font-family: 'Google Sans Text', sans-serif;
+      padding: 0.6rem 1.1rem;
+      border-radius: 9999px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: var(--text);
+      font-size: 0.88rem;
       cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    select:focus {
+      border-color: var(--accent);
+    }
+    button {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border-radius: 9999px;
+      padding: 0.65rem 1.35rem;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
     }
     button.primary {
-      background: var(--af-hi);
-      color: #061325;
-      border: none;
-      font-weight: 700;
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 1px 3px rgba(26, 115, 232, 0.3);
+    }
+    button.primary:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 3px 8px rgba(26, 115, 232, 0.4);
     }
     .layout-main {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 1.25rem;
-      margin-bottom: 1.25rem;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1.75rem;
     }
     .card {
       background: var(--panel);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.15rem;
+      border-radius: 16px;
+      padding: 1.4rem 1.6rem;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.15s ease;
+    }
+    .card:hover {
+      box-shadow: var(--shadow-md);
+    }
+    .card-title {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.3rem;
     }
     canvas#visor3d {
       width: 100%;
-      height: 360px;
-      background: radial-gradient(circle at center, #131c31 0%, #070a12 100%);
-      border-radius: 8px;
+      height: 380px;
+      background: radial-gradient(circle at 50% 50%, #ffffff 0%, #f1f4f9 100%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
       cursor: grab;
       display: block;
+      margin-top: 0.75rem;
+    }
+    canvas#visor3d:active {
+      cursor: grabbing;
     }
     .legend {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-top: 0.75rem;
-      font-size: 0.8rem;
+      gap: 0.65rem;
+      margin-top: 0.9rem;
+      font-size: 0.78rem;
       color: var(--muted);
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: #f8f9fa;
+      border: 1px solid var(--border-subtle);
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      font-weight: 500;
     }
     .dot {
       display: inline-block;
-      width: 10px;
-      height: 10px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
-      margin-right: 4px;
     }
     .kpi-row {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 0.75rem;
-      margin: 0.9rem 0;
+      gap: 0.85rem;
+      margin: 1.1rem 0;
     }
     .kpi-mini {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--border);
-      padding: 0.75rem;
-      border-radius: 8px;
+      background: #f8f9fa;
+      border: 1px solid var(--border-subtle);
+      padding: 0.9rem 1.1rem;
+      border-radius: 12px;
     }
-    .kpi-mini span { display: block; font-size: 0.78rem; color: var(--muted); }
-    .kpi-mini strong { font-size: 1.35rem; color: var(--af-hi); }
+    .kpi-mini span {
+      display: block;
+      font-size: 0.76rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+    .kpi-mini strong {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+      display: block;
+      margin-top: 0.2rem;
+    }
     .bar-strip {
       display: flex;
-      height: 44px;
+      height: 48px;
       align-items: flex-end;
       gap: 2px;
-      margin-top: 0.8rem;
-      padding: 4px;
-      background: #070a12;
-      border-radius: 6px;
+      margin-top: 0.75rem;
+      padding: 5px 6px;
+      background: #f8f9fa;
+      border: 1px solid var(--border);
+      border-radius: 10px;
       overflow-x: auto;
     }
     .bar-res {
       flex: 1;
       min-width: 3px;
       border-radius: 2px 2px 0 0;
+      transition: opacity 0.15s;
+    }
+    .bar-res:hover {
+      opacity: 0.8;
+    }
+    #panel-ia {
+      margin-top: 1.25rem;
+      padding: 1.1rem 1.35rem;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--accent);
+      box-shadow: var(--shadow-sm);
+    }
+    #panel-ia h4 {
+      font-family: 'Google Sans', sans-serif;
+      color: var(--accent);
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    #panel-ia p {
+      font-size: 0.88rem;
+      color: #3c4043;
+      line-height: 1.6;
+    }
+    #panel-ia ul {
+      margin-left: 1.25rem;
+      margin-top: 0.5rem;
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    #panel-ia ul li {
+      margin-bottom: 0.3rem;
     }
   </style>
 </head>
@@ -618,39 +772,45 @@ HTML_VISOR = """<!DOCTYPE html>
   <header>
     <div>
       <h1>AlphaFold-Lite Pocket Viewer · Microservicio en Docker</h1>
-      <p style="color: var(--muted); font-size: 0.9rem;">
+      <p class="subtitle">
         Sistemas Programables · Inspirado en AlphaFold (Google DeepMind) · Análisis de Confianza Estructural pLDDT
       </p>
     </div>
-    <span class="badge">Contenedor Docker · Puerto 8001</span>
+    <span class="badge">
+      <span class="dot-pulse"></span>
+      Contenedor Docker · Puerto 8001
+    </span>
   </header>
 
   <section class="toolbar">
-    <label for="sel-prot" style="font-weight: 600;">Proteína (UniProt ID):</label>
+    <label for="sel-prot">Proteína (UniProt ID):</label>
     <select id="sel-prot" onchange="cargarProteina()">
       <option value="P69905">P69905 · Hemoglobina Subunidad Alfa (Homo sapiens)</option>
       <option value="P01308">P01308 · Insulina Humana (Homo sapiens)</option>
       <option value="P01542">P01542 · Crambina (Crambe hispanica)</option>
       <option value="P04637">P04637 · Supresor Tumoral p53 (Homo sapiens)</option>
     </select>
-    <button class="primary" onclick="interpretarConIA()">Generar Síntesis Estructural con IA</button>
-    <span id="etiqueta-origen" style="font-size: 0.82rem; color: var(--muted);"></span>
+    <button class="primary" onclick="interpretarConIA()">
+      <span>✦</span> Generar Síntesis Estructural con IA
+    </button>
+    <span id="etiqueta-origen" style="font-size: 0.82rem; color: var(--muted); margin-left: auto;"></span>
   </section>
 
   <div class="layout-main">
     <section class="card">
-      <h3 style="margin-bottom: 0.5rem;">Esqueleto Cα 3D Interactivo (Arrastra con el mouse para rotar)</h3>
-      <canvas id="visor3d" width="560" height="360"></canvas>
+      <div class="card-title">Esqueleto Cα 3D Interactivo</div>
+      <p style="color: var(--muted); font-size: 0.82rem;">Arrastra con el mouse para rotar en 3 dimensiones</p>
+      <canvas id="visor3d" width="560" height="380"></canvas>
       <div class="legend">
-        <span><i class="dot" style="background: var(--af-vh)"></i>Muy alta (pLDDT ≥ 90)</span>
-        <span><i class="dot" style="background: var(--af-hi)"></i>Confiable (70–90)</span>
-        <span><i class="dot" style="background: var(--af-lo)"></i>Baja (50–70)</span>
-        <span><i class="dot" style="background: var(--af-vl)"></i>Desorden (&lt; 50)</span>
+        <span class="legend-item"><i class="dot" style="background: var(--af-vh)"></i>Muy alta (pLDDT ≥ 90)</span>
+        <span class="legend-item"><i class="dot" style="background: var(--af-hi)"></i>Confiable (70–90)</span>
+        <span class="legend-item"><i class="dot" style="background: var(--af-lo)"></i>Baja (50–70)</span>
+        <span class="legend-item"><i class="dot" style="background: var(--af-vl)"></i>Desorden (&lt; 50)</span>
       </div>
     </section>
 
     <section class="card">
-      <h3 id="prot-titulo">Cargando proteína...</h3>
+      <h3 class="card-title" id="prot-titulo">Cargando proteína...</h3>
       <p id="prot-sub" style="color: var(--muted); font-size: 0.88rem;"></p>
 
       <div class="kpi-row">
@@ -672,19 +832,19 @@ HTML_VISOR = """<!DOCTYPE html>
         </div>
       </div>
 
-      <p style="font-size: 0.85rem; margin-bottom: 0.3rem;">
-        <strong>Diagnóstico Global:</strong> <span id="m-clasif" style="color: var(--af-hi);"></span>
+      <p style="font-size: 0.88rem; margin-bottom: 0.3rem;">
+        <strong>Diagnóstico Global:</strong> <span id="m-clasif" style="color: var(--accent); font-weight: 600;"></span>
       </p>
 
-      <h4 style="margin-top: 1rem; font-size: 0.85rem; color: var(--muted);">
+      <h4 style="margin-top: 1.1rem; font-size: 0.82rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em;">
         Perfil de Confianza pLDDT por Residuo (N-terminal → C-terminal)
       </h4>
       <div class="bar-strip" id="perfil-barras"></div>
 
-      <div id="panel-ia" style="margin-top: 1rem; padding-top: 0.9rem; border-top: 1px solid var(--border); display: none;">
-        <h4 id="ia-origen" style="color: var(--af-hi); margin-bottom: 0.35rem;"></h4>
-        <p id="ia-texto" style="font-size: 0.88rem; margin-bottom: 0.4rem;"></p>
-        <ul id="ia-obs" style="margin-left: 1.2rem; font-size: 0.84rem; color: var(--muted);"></ul>
+      <div id="panel-ia" style="display: none;">
+        <h4 id="ia-origen"><span>✦</span> Interpretación Bioinformática</h4>
+        <p id="ia-texto"></p>
+        <ul id="ia-obs"></ul>
       </div>
     </section>
   </div>
@@ -698,10 +858,10 @@ HTML_VISOR = """<!DOCTYPE html>
     const ctx = canvas.getContext('2d');
 
     function colorPorBanda(banda) {
-      if (banda === 'MUY_ALTA_CONFIANZA') return '#1d4ed8';
-      if (banda === 'CONFIANZA_ALTA') return '#38bdf8';
-      if (banda === 'BAJA_CONFIANZA') return '#facc15';
-      return '#fb923c';
+      if (banda === 'MUY_ALTA_CONFIANZA') return '#004ac6';
+      if (banda === 'CONFIANZA_ALTA') return '#0284c7';
+      if (banda === 'BAJA_CONFIANZA') return '#f59e0b';
+      return '#ea580c';
     }
 
     canvas.addEventListener('mousedown', e => { arrastrando = true; ultX = e.clientX; ultY = e.clientY; });
@@ -759,7 +919,7 @@ HTML_VISOR = """<!DOCTYPE html>
       for (const p of ordenados) {
         ctx.fillStyle = p.color;
         ctx.beginPath();
-        ctx.arc(p.px, p.py, 4.0, 0, Math.PI * 2);
+        ctx.arc(p.px, p.py, 4.2, 0, Math.PI * 2);
         ctx.fill();
       }
       requestAnimationFrame(renderizar3D);
@@ -796,7 +956,7 @@ HTML_VISOR = """<!DOCTYPE html>
       document.getElementById('ia-obs').innerHTML = '';
       const res = await fetch('/api/interpretar/' + uid, { method: 'POST' });
       const d = await res.json();
-      document.getElementById('ia-origen').textContent = 'Síntesis Estructural · ' + d.origen_modelo;
+      document.getElementById('ia-origen').innerHTML = '<span>✦</span> Síntesis Estructural · ' + d.origen_modelo;
       document.getElementById('ia-texto').textContent = d.sintesis_estructural;
       document.getElementById('ia-obs').innerHTML = d.observaciones_clave.map(o => `<li>${o}</li>`).join('');
     }
