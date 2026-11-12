@@ -81,17 +81,7 @@ docker run --rm -p 8001:8001 --name alphafold-viewer alphafold-pocket-viewer:1.0
 
 ---
 
-## 5. Guía de Revisión para el Equipo (3 Integrantes · Viernes)
-
-| Integrante | Rol en la Revisión | Qué mostrar y explicar (2 min) |
-| :--- | :--- | :--- |
-| **Integrante 1** | **Función y Fundamento en AlphaFold** | Abrir `http://localhost:8001`, rotar con el mouse la estructura 3D de la **Hemoglobina (`P69905`)** y cambiar en el selector al **Supresor tumoral p53 (`P04637`)** para mostrar cómo cambian los colores de las 4 bandas `pLDDT` (azul oscuro para el núcleo rígido vs. amarillo/naranja en regiones flexibles) y presionar **"Generar Síntesis Estructural con IA"**. |
-| **Integrante 2** | **Implementación del `Dockerfile`** | Explicar línea por línea el [`Dockerfile`](./Dockerfile): por qué se usa `python:3.12-slim`, por qué se copia `requirements.txt` antes del código (caché de capas), por qué se usa el usuario `appuser` (seguridad no-root) y cómo funciona la instrucción `HEALTHCHECK`. |
-| **Integrante 3** | **Objetivo de Docker y Persistencia (`docker-compose.yml`)** | Explicar [`docker-compose.yml`](./docker-compose.yml): cómo el mapeo de puertos `8001:8001` conecta la red del contenedor con el navegador anfitrión y cómo el volumen `volumen_estructuras_pdb` guarda en caché los archivos `.pdb` (mostrando en la pantalla que la fuente cambia a `CACHE_VOLUMEN_DOCKER` al recargar una proteína). |
-
----
-
-## 6. Referencias Académicas, Libros y Literatura Científica
+## 5. Referencias Académicas, Libros y Literatura Científica
 
 Para una comprensión exhaustiva de la biofísica de proteínas, el funcionamiento matemático de AlphaFold y el aprendizaje profundo geométrico, consulta el compendio formal en:
 
