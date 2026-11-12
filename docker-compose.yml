@@ -1,0 +1,29 @@
+# ==============================================================================
+# docker-compose.yml — AlphaFold-Lite Pocket Viewer
+# ==============================================================================
+services:
+  alphafold-viewer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: alphafold-viewer
+    ports:
+      - "8001:8001"
+    environment:
+      - DIRECTORIO_CACHE_PDB=/app/datos/estructuras_pdb
+      - TIMEOUT_RED_SEG=8
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - MODELO_GROQ=${MODELO_GROQ:-openai/gpt-oss-120b}
+    volumes:
+      - volumen_estructuras_pdb:/app/datos/estructuras_pdb
+    networks:
+      - red_alphafold
+    restart: unless-stopped
+
+volumes:
+  volumen_estructuras_pdb:
+    name: alphafold_volumen_estructuras_pdb
+
+networks:
+  red_alphafold:
+    driver: bridge

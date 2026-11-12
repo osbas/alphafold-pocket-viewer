@@ -1,0 +1,4 @@
+AlphaFold Protein Structure Database Terms of Use Notification
+Timestamp: 2026-11-11T16:59:00-06:00
+Terms of Use URL: https://alphafold.ebi.ac.uk/
+Data from the AlphaFold Protein Structure Database is provided by EMBL-EBI and Google DeepMind under CC-BY-4.0 license terms.
